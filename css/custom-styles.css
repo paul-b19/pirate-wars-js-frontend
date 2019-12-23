@@ -1,0 +1,77 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 101px;
+}
+
+.navbar-logo {
+  height: 40px;
+  width: 60px;
+}
+.logo {
+  height: 52px;
+  width: 78px;
+}
+.welcome {
+  margin: 100px 0 30px 0;
+}
+.loading-bar {
+  margin: 70px 150px 30px 150px;
+}
+
+/* avatar selection */
+.avatars {
+  margin: 15px 0 10px 0;
+}
+.ava-img {
+  height: 35px; width: 42px;
+}
+[name='radiob'] {
+  display: none; 
+}
+.avatars input:active +.ava{opacity: .9;}
+.avatars input:checked +.ava{
+  -webkit-filter: none;
+     -moz-filter: none;
+          filter: none;
+}
+.ava{
+  cursor:pointer;
+  display:inline-block;
+  -webkit-transition: all 100ms ease-in;
+     -moz-transition: all 100ms ease-in;
+          transition: all 100ms ease-in;
+  -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+     -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+          filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+.ava:hover{
+  -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+     -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+          filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+/* leaderboard */
+.leaderboard {
+  margin: 30px 30px 30px 30px;
+}
+.leader-ava {
+  height: 22px; width: 27px;
+}
+
+.footer {
+  margin-top: 30px;
+  padding: 30px;
+  border-top-left-radius: 75px 10px;
+  border-color: #333;
+  border-width: 2px;
+  border-top-style: solid;
+  position: absolute;
+  bottom: 0;
+  /* fixed height of the footer */
+  height: 86px;
+}
+
