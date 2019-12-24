@@ -10,6 +10,10 @@
   </head>
   <body>
 
+    <!-- background image -->
+    <!-- Page Wrapper -->
+    <!-- <div style="background: url(media/background.jpeg)" class="page-holder bg-cover"> -->
+
     <!-- header with navigation bar -->
     <div class="navbar navbar-expand-lg navbar-light bg-light fixed-top">  <!-- class="fixed-top" -->
       <div class="container">
@@ -34,8 +38,8 @@
             <li class="nav-item">
               <a class="nav-link" href="">GitHub</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">Exit</a>
+            <li class="nav-item" id="quit-link" style="display: none;">
+              <a class="nav-link" href="" onclick="quitGame(event)">Quit</a>
             </li>
           </ul>
         </div>
@@ -56,29 +60,26 @@
     </div>
 
     <!-- main home screen with leaderboard -->
-    <div class="home-screen text-center" id="home-screen" style="display: none;">
+    <div class="home-screen text-center" id="home-screen" style="display: initial;">
       <h1 class="welcome">Ahoy! Welcome to <img class="logo" alt="Pirate Flag Logo" src="media/pirate-navbar-logo.png">
         Pirate Wars
       </h1>
 
       <form>
         <div class="player-name col-sm-12 d-flex justify-content-center" id="player-name">   <!-- class="row" -->
-          <label for="playerName" class="col-sm-2 col-form-label text-center">Enter your name</label>
-          <div class="col-sm-3" style="display: initial;">
+          <label for="playerName" class="col-lg-2 col-sm-3 col-xs-4 col-form-label text-center">Enter your name</label>
+          <div class="col-md-4 col-sm-5 col-xs-7" style="display: initial;">
             <input type="text" class="form-control" id="playerName" placeholder="your name">
-          </div>
-          <div class="col-sm-3 has-danger" style="display: none;">
-            <input type="text" class="form-control is-invalid" id="playerNameInvalid" placeholder="your name">
-            <div class="invalid-feedback">Please, enter your name!</div>
+            <div class="invalid-feedback" style="display: none;">Please, enter your name!</div>
           </div>
         </div>
 
         <div class="avatars col-sm-12 row d-flex justify-content-between" id="avatar-radio-button">
-          <label class="col-sm-2 col-form-label text-center">Select avatar</label>
+          <label class="col-sm-2 col-xs-4 col-form-label text-center">Select avatar</label>
           <!-- avatar options are rendered here -->
         </div>
 
-        <button type="submit" class="btn btn-primary">Let's Play!</button>
+        <button type="submit" class="btn btn-primary" onclick="letsPlay(event)">Let's Play!</button>
       </form>
 
       <div class="leaderboard">
@@ -101,10 +102,10 @@
     </div>
 
     <!-- game screen -->
-    <div class="container-fluid">
-      <div class="game-screen row" id="game-screen">
+    <div class="container-fluid game-container" id="game-container" style="display: none;">
+      <div class="game-screen row">
         <!-- player's grid -->
-        <div class="game-grid col-xs-12 col-sm-6 container-fluid" id="player-grid"> <!-- jumbotron -->
+        <div class="game-grid col-xs-12 col-sm-6" id="player-grid">
           <!-- grid's rendered here -->
         </div>
         <!-- ships selection -->
@@ -112,10 +113,15 @@
           <!-- ships board is rendered here -->
         </div>
         <!-- computer's grid -->
-        <div class="game-grid col-xs-12 col-sm-6 container-fluid" id="computer-grid">
+        <div class="game-grid col-xs-12 col-sm-6" id="computer-grid">
           <!-- grid's rendered here -->
         </div>
-  
+      </div>
+      <!-- game chat -->
+      <div class="game-chat row text-center">
+        <div class="col-lg-12 d-none d-lg-block">
+          <h1>Yeah, let's see what you can!</h1>
+        </div>
       </div>
     </div>
 
@@ -128,5 +134,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="index.js"></script>
+
+    <!-- </div> -->
   </body>
 </html>

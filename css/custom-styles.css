@@ -8,6 +8,14 @@ body {
   margin-bottom: 101px;
 }
 
+/* background */
+/* .page-holder {
+  min-height: 100vh;
+}
+.bg-cover {
+  background-size: cover !important;
+} */
+
 .navbar-logo {
   height: 40px;
   width: 60px;
@@ -21,6 +29,28 @@ body {
 }
 .loading-bar {
   margin: 70px 150px 30px 150px;
+}
+
+/* name input */
+.apply-shake {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 
 /* avatar selection */
@@ -64,16 +94,24 @@ body {
 }
 
 /* game screen */
+.game-container {
+  margin-top: 80px;
+  /* width: 100%; */
+  /* padding-top: 10%; */
+}
 .game-screen {
-  margin-top: 100px;
-  height: 500px;
+  /* width: 100%; */
+  /* padding: 0 15% 0 15%; */
+  margin: 0 20% 0 20%;
 }
 .game-grid {
-  border: 3px, solid, black;
+  /* width: 100%; */
+  padding: 5%;
 }
 .cell {
-  height: 30px; width: 30px;
-  border: 1px, solid, black;
+  width: 10%;
+  padding-bottom: 10%;
+  background: gold; /** <-- For the demo **/
 }
 
 
