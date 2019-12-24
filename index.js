@@ -19,7 +19,7 @@ function renderAvatars() {
   avatarSelection.querySelector('input').setAttribute("checked", "")
 }
 
-// rendering leaderbord
+//  rendering leaderbord
 function renderLeaderboard() {
   console.log('Leaderboard')
   fetch(url).then(resp => resp.json())
@@ -46,8 +46,33 @@ function addLeaders(leaders) {
       <td>${leader.accuracy}%</td>
     `
     leaderbord.appendChild(tr)
-  })
+  }) 
+}
+
+//  rendering game grids
+function renderGameGrids() {
+  const playerGrid = document.querySelector('#player-grid')
+  const computerGrid = document.querySelector('#computer-grid')
   
+  for (x=0; x<10; x++) {
+    let rowP = document.createElement('div')
+    rowP.setAttribute("class", "row")
+    playerGrid.appendChild(rowP)
+    let rowC = document.createElement('div')
+    rowC.setAttribute("class", "row")
+    computerGrid.appendChild(rowC)
+    for (y=0; y<10; y++) {
+      let cellP = document.createElement("div")
+      cellP.dataset.coordinates = `${x}${y}`
+      cellP.setAttribute("class", "cell col-xs-1 border border-dark")
+      rowP.appendChild(cellP)
+
+      let cellC = document.createElement("div")
+      cellC.dataset.coordinates = `${x}${y}`
+      cellC.setAttribute("class", "cell col-xs-1 border border-dark")
+      rowC.appendChild(cellC)
+    }
+  } 
 }
 
 
@@ -64,4 +89,5 @@ window.addEventListener('DOMContentLoaded', () => {
   console.log('DOM fully loaded and parsed');
   renderAvatars()
   renderLeaderboard()
+  renderGameGrids()
 });

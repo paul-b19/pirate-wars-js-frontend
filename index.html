@@ -56,7 +56,7 @@
     </div>
 
     <!-- main home screen with leaderboard -->
-    <div class="home-screen text-center" id="home-screen">
+    <div class="home-screen text-center" id="home-screen" style="display: none;">
       <h1 class="welcome">Ahoy! Welcome to <img class="logo" alt="Pirate Flag Logo" src="media/pirate-navbar-logo.png">
         Pirate Wars
       </h1>
@@ -97,9 +97,26 @@
           </tbody>
         </table> 
       </div>
-
-
       
+    </div>
+
+    <!-- game screen -->
+    <div class="container-fluid">
+      <div class="game-screen row" id="game-screen">
+        <!-- player's grid -->
+        <div class="game-grid col-xs-12 col-sm-6 container-fluid" id="player-grid"> <!-- jumbotron -->
+          <!-- grid's rendered here -->
+        </div>
+        <!-- ships selection -->
+        <div class="ships-selection col-xs-12 col-sm-6" id="ships-selection" style="display: none;">
+          <!-- ships board is rendered here -->
+        </div>
+        <!-- computer's grid -->
+        <div class="game-grid col-xs-12 col-sm-6 container-fluid" id="computer-grid">
+          <!-- grid's rendered here -->
+        </div>
+  
+      </div>
     </div>
 
     <!-- footer -->
