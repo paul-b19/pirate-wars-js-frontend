@@ -1,20 +1,12 @@
 html {
   position: relative;
   min-height: 100%;
-  /* height: 100%; */
 }
 body {
+  background: transparent;
   /* Margin bottom by footer height */
   margin-bottom: 101px;
 }
-
-/* background */
-/* .page-holder {
-  min-height: 100vh;
-}
-.bg-cover {
-  background-size: cover !important;
-} */
 
 .navbar-logo {
   height: 40px;
@@ -25,7 +17,9 @@ body {
   width: 78px;
 }
 .welcome {
-  margin: 100px 0 30px 0;
+  padding-top: 100px;
+  margin: 0 0 30px 0;
+  /* margin: 100px 0 30px 0; */
 }
 .loading-bar {
   margin: 70px 150px 30px 150px;
@@ -89,6 +83,9 @@ body {
 .leaderboard {
   margin: 30px 30px 30px 30px;
 }
+table {
+  opacity: .7;
+}
 .leader-ava {
   height: 22px; width: 27px;
 }
@@ -96,8 +93,7 @@ body {
 /* game screen */
 .game-container {
   margin-top: 80px;
-  /* width: 100%; */
-  /* padding-top: 10%; */
+  /* padding-top: 100px; */
 }
 .game-screen {
   /* width: 100%; */
@@ -114,8 +110,33 @@ body {
   background: gold; /** <-- For the demo **/
 }
 
+/* ships selection */
+.ships-selection {
+  background: transparent;
+}
+.ships-box {
+  /* padding-bottom: 5%; */
+  padding-bottom: 2vmin;
+}
+/* .ships-btns {
+  height: 5%;
+} */
+.ship-four {width: 100%;}
+.ship-three {width: 50%;}
+.ship-two {width: 33.33%;}
+.ship-one {width: 25%;}
+.img-fluid {
+  /* max-width: 100%;
+  height: auto; */
+  height: 100%;
+  max-width: auto;
+}
+
+
 
 .footer {
+  background-color: #ffffff;
+  opacity: .9;
   margin-top: 30px;
   padding: 30px;
   border-top-left-radius: 75px 10px;

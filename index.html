@@ -5,14 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="media/pirate-icon.ico">
     <title>Pirate Wars</title>
+
+    <style>
+      html { 
+        background: url(media/bg_1280.jpg) no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
+    </style>
+
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/custom-styles.css" rel="stylesheet">
   </head>
   <body>
-
-    <!-- background image -->
-    <!-- Page Wrapper -->
-    <!-- <div style="background: url(media/background.jpeg)" class="page-holder bg-cover"> -->
 
     <!-- header with navigation bar -->
     <div class="navbar navbar-expand-lg navbar-light bg-light fixed-top">  <!-- class="fixed-top" -->
@@ -83,7 +90,7 @@
       </form>
 
       <div class="leaderboard">
-        <h3 id="progress-animated">Leaderboard</h3>
+        <h3 id="leaderboard-label">Leaderboard</h3>
         <table class="table table-hover">
           <thead>
             <tr>
@@ -104,16 +111,69 @@
     <!-- game screen -->
     <div class="container-fluid game-container" id="game-container" style="display: none;">
       <div class="game-screen row">
+        <!-- ships selection -->
+        <div class="game-grid ships-selection col-xs-12 col-sm-6" id="ships-selection" style="display: block;">
+          <!-- ships board is rendered here -->
+          <div class="ships-box col-xs-12 row">
+            <div class="col-xs-12">
+              <h3 style="font-size:3vmax;">Arrange your ships</h3>
+            </div>
+          </div>
+          <div class="ships-box col-xs-12 row">
+            <div class="ship-four col-xs-12">
+              <img class="img-fluid" src="media/ships/ship-four.png" alt="ship-four">
+            </div>
+          </div>
+          <div class="ships-box col-xs-12 row">
+            <div class="ship-three col-xs-6">
+              <img class="img-fluid" src="media/ships/ship-three.png" alt="ship-three">
+            </div>
+            <div class="ship-three col-xs-6">
+              <img class="img-fluid" src="media/ships/ship-three.png" alt="ship-three">
+            </div>
+          </div>
+          <div class="ships-box col-xs-12 row">
+            <div class="ship-two col-xs-4">
+              <img class="img-fluid" src="media/ships/ship-two.png" alt="ship-two">
+            </div>
+            <div class="ship-two col-xs-4">
+              <img class="img-fluid" src="media/ships/ship-two.png" alt="ship-two">
+            </div>
+            <div class="ship-two col-xs-4">
+              <img class="img-fluid" src="media/ships/ship-two.png" alt="ship-two">
+            </div>
+          </div>
+          <div class="ships-box col-xs-12 row">
+            <div class="ship-one col-xs-3">
+              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+            </div>
+            <div class="ship-one col-xs-3">
+              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+            </div>
+            <div class="ship-one col-xs-3">
+              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+            </div>
+            <div class="ship-one col-xs-3">
+              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+            </div>
+          </div>
+
+          <div class="ships-btns col-xs-12 row">
+            <div class="ship-three col-xs-6">
+              <button type="button" class="btn btn-primary btn-md btn-block">Rotate</button>
+            </div>
+            <div class="ship-three col-xs-6">
+              <button type="button" class="btn btn-primary btn-md btn-block">Random</button>
+            </div>
+          </div>
+
+        </div>
         <!-- player's grid -->
         <div class="game-grid col-xs-12 col-sm-6" id="player-grid">
           <!-- grid's rendered here -->
         </div>
-        <!-- ships selection -->
-        <div class="ships-selection col-xs-12 col-sm-6" id="ships-selection" style="display: none;">
-          <!-- ships board is rendered here -->
-        </div>
         <!-- computer's grid -->
-        <div class="game-grid col-xs-12 col-sm-6" id="computer-grid">
+        <div class="game-grid col-xs-12 col-sm-6" id="computer-grid" style="display: none;">
           <!-- grid's rendered here -->
         </div>
       </div>
@@ -135,6 +195,5 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="index.js"></script>
 
-    <!-- </div> -->
   </body>
 </html>
