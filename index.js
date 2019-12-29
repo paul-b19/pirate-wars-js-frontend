@@ -2,6 +2,16 @@ const url = "http://localhost:3000/leaders"
 const homeScreen = document.querySelector('#home-screen')
 const gameScreen = document.querySelector('#game-container')
 const quitLink = document.querySelector('#quit-link')
+const shipsBoard = document.querySelector('#ships-selection')
+const playerGrid = document.querySelector('#player-grid')
+const computerGrid = document.querySelector('#computer-grid')
+let playerMatrix = []
+let compMatrix = []
+let shipOrientation = 'hor'
+let shipLength = 0
+let shipInProgress = false
+let shipCounter = 0
+
 
 //  navbar collapse
 function collapseNavBar() {
@@ -60,8 +70,8 @@ function addLeaders(leaders) {
 
 //  rendering game grids
 function renderGameGrids() {
-  const playerGrid = document.querySelector('#player-grid')
-  const computerGrid = document.querySelector('#computer-grid')
+  // const playerGrid = document.querySelector('#player-grid')   /// -- !!!
+  // const computerGrid = document.querySelector('#computer-grid')   /// -- !!!
   
   for (x=0; x<10; x++) {
     let rowP = document.createElement('div')
@@ -73,18 +83,18 @@ function renderGameGrids() {
     for (y=0; y<10; y++) {
       let cellP = document.createElement("div")
       cellP.dataset.coordinates = `${x}${y}`
-      cellP.setAttribute("class", "cell border border-dark")
+      cellP.setAttribute("class", "cell") // class: "border"
       rowP.appendChild(cellP)
 
       let cellC = document.createElement("div")
       cellC.dataset.coordinates = `${x}${y}`
-      cellC.setAttribute("class", "cell border border-dark")
+      cellC.setAttribute("class", "cell") // class: "border"
       rowC.appendChild(cellC)
     }
   } 
 }
 
-//  starting a game
+//  starting a game (ships arrangement)
 function letsPlay(event) {
   event.preventDefault();
   const form = event.target.parentNode
@@ -120,9 +130,260 @@ function quitGame(event) {
   gameScreen.setAttribute("style", "display: none;")
   quitLink.setAttribute("style", "display: none;")
   homeScreen.setAttribute("style", "display: initial;")
+
+  /// shipsSelection --> active
+  /// computerGrid --> inactive
+  /// reset player matrix
+  /// or function resetAll() ???
 }
 
+//  selecting ships
+function selectingShips() {
+  // const shipsBoard = document.querySelector('#ships-selection')
+  const random = shipsBoard.querySelector('#random')
+  const rotate = shipsBoard.querySelector('#rotate')
+  const go = shipsBoard.querySelector('#go')
+  let ships = shipsBoard.querySelectorAll("[type='ship']")
+  let matrix = playerMatrix
+  shipsBoard.addEventListener('click', function(e) {
+    // ship click
+    if (e.target.getAttribute("type") === "ship" && !e.target.classList.contains("set-selected") && shipInProgress === false) {
+      console.log(e.target.parentNode.getAttribute("name"))
+      shipInProgress = true
+      e.target.classList.remove("set-active")
+      e.target.classList.add("set-selected")
+      random.classList.remove("set-active")
+      random.classList.add("set-selected")
+      setShip(e.target.parentNode.getAttribute("name"))
+    } else if (e.target === random && !e.target.classList.contains("set-selected")) {
+      // random click
+      console.log(e.target.id)
+      ships.forEach(ship => {
+        ship.classList.remove("set-active")
+        ship.classList.add("set-selected")
+      })
+      rotate.classList.remove("set-active")
+      rotate.classList.add("set-selected")
+      go.classList.remove("set-selected")
+      go.classList.add("set-active")
+      resetMatrix(matrix)
+      shipsRandomizer(matrix)
+    } else if (e.target === rotate && !e.target.classList.contains("set-selected")) {
+      // rotate click
+      console.log(e.target.id)
+      shipOrientation === 'hor' ? shipOrientation = 'ver' : shipOrientation = 'hor'
+    } else if (e.target === go && !e.target.classList.contains("set-selected")) {
+      // go click
+      console.log(e.target.id)
+      ships.forEach(ship => {
+        ship.classList.remove("set-selected")
+        ship.classList.add("set-active")
+      })
+      rotate.classList.remove("set-selected")
+      rotate.classList.add("set-active")
+      random.classList.remove("set-selected")
+      random.classList.add("set-active")
+      go.classList.remove("set-active")
+      go.classList.add("set-selected")
 
+      shipsBoard.setAttribute("style", "display: none;")
+      computerGrid.setAttribute("style", "display: initial;")
+      // computerGrid.style.display = ""
+      resetMatrix(compMatrix)
+      shipsRandomizer(compMatrix)
+      console.log(compMatrix)
+
+      startBattle()
+    }
+  }) 
+}
+
+//  reset matrix
+function resetMatrix(matrix) {
+  matrix.length = 0
+  for (x=0; x<10; x++) {
+    let gridRow = []
+    for (y=0; y<10; y++) {
+      gridRow.push(0)
+    }
+    matrix.push(gridRow)
+  }
+}
+
+//  setting ship type and horizontal orientation
+function setShip(type) {
+  console.log(type)
+  shipOrientation = "hor"
+  switch (type) {
+    case "ship-four":
+      shipLength = 4
+      break;
+    case "ship-three":
+      shipLength = 3
+      break;
+    case "ship-two":
+      shipLength = 2
+      break;
+    case "ship-one":
+      shipLength = 1
+      break;
+  }
+}
+
+//  arranging ships manual
+function shipsArrangement() {
+  playerGrid.addEventListener('click', function(e) {
+    if (shipLength !== 0) {
+      console.log(e.target.dataset.coordinates)
+      let xc = parseInt(e.target.dataset.coordinates.charAt(0))
+      let yc = parseInt(e.target.dataset.coordinates.charAt(1))
+      let matrix = playerMatrix
+
+      if (coordVerification(xc, yc, matrix)) {
+        console.log('true')
+
+        addShip(xc, yc, matrix)
+        renderShip(xc, yc)
+        shipCounter++
+        if (shipCounter === 10) {
+          shipCounter = 0
+          rotate.classList.remove("set-active")
+          rotate.classList.add("set-selected")
+          go.classList.remove("set-selected")
+          go.classList.add("set-active")
+        }
+      }
+    }
+  })
+}
+
+//  arranging ships random
+function shipsRandomizer(matrix) {
+  let orientation = ['hor', 'ver']
+  let ships = [4,3,3,2,2,2,1,1,1,1]
+  if (matrix === playerMatrix) {
+    playerGrid.querySelectorAll('.cell-ship').forEach(ship => {
+      ship.classList.remove("cell-ship")
+    })
+  }
+  while (ships.length > 0) {
+    let xc = Math.floor(Math.random()*10)
+    let yc = Math.floor(Math.random()*10)
+    shipLength = ships[0]
+    shipOrientation = orientation[Math.floor(Math.random() * orientation.length)];
+    if (coordVerification(xc, yc, matrix)) {
+      addShip(xc, yc, matrix)
+      if (matrix === playerMatrix) {
+        renderShip(xc, yc)
+      }
+      ships.shift()
+    }
+  }
+  shipLength = 0
+  shipOrientation = 'hor'
+}
+
+//  coordinates verification
+function coordVerification(xc, yc, matrix) {
+  let result = false
+  if (shipOrientation === "hor") {
+    if (yc + shipLength - 1 <= 9) {
+      xc === 0 ? x = 0 : x = xc-1
+      xc === 9 ? xMax = 9 : xMax = xc+1
+      for (x; x<=xMax; x++) {
+        yc === 0 ? y = 0 : y = yc-1
+        yc+shipLength-1 === 9 ? yMax = 9 : yMax = yc+shipLength
+        for (y; y<=yMax; y++) {
+          if (matrix[x][y] == 1) {
+            result = false
+            break;
+          } else {
+            result = true
+          }
+        }
+        if (result === false) {break}
+      }
+    }
+  } else {
+    if (xc + shipLength - 1 <= 9) {
+      xc === 0 ? x = 0 : x = xc-1
+      xc+shipLength-1 === 9 ? xMax = 9 : xMax = xc+shipLength
+      for (x; x<=xMax; x++) {
+        yc === 0 ? y = 0 : y = yc-1
+        yc === 9 ? yMax = 9 : yMax = yc+1
+        for (y; y<=yMax; y++) {
+          if (matrix[x][y] === 1) {
+            result = false
+            break;
+          } else {
+            result = true
+          }
+        }
+        if (result === false) {break}
+      }
+    }
+  }
+  console.log(result)
+  return result
+}
+
+//  adding ship to matrix
+function addShip(xc, yc, matrix) {
+  if (shipOrientation === "hor") {
+    for (i=yc; i<yc+shipLength; i++) {
+      matrix[xc][i] = 1
+    }
+  } else {
+    for (i=xc; i<xc+shipLength; i++) {
+      matrix[i][yc] = 1
+    }
+  }
+  // console.log(matrix)
+}
+
+//  rendering ship on player's grid
+function renderShip(xc, yc) {
+  if (shipOrientation === "hor") {
+    for (i=yc; i<yc+shipLength; i++) {
+      playerGrid.querySelector(`[data-coordinates = '${xc}${i}']`).classList.add("cell-ship")
+    }
+  } else {
+    for (i=xc; i<xc+shipLength; i++) {
+      playerGrid.querySelector(`[data-coordinates = '${i}${yc}']`).classList.add("cell-ship")
+    }
+  }
+  shipLength = 0
+  shipInProgress = false
+}
+
+//  starting battle
+function startBattle() {
+  playerMove()
+  
+}
+
+//  player's move
+function playerMove() {
+  computerGrid.addEventListener('click', function(e) {
+    console.log(e.target.dataset.coordinates)
+    let xc = parseInt(e.target.dataset.coordinates.charAt(0))
+    let yc = parseInt(e.target.dataset.coordinates.charAt(1))
+    let matrix = compMatrix
+    switch (matrix[xc][yc]) {
+      case 0:
+        matrix[xc][yc] = '*'
+        computerGrid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-miss")
+        break;
+      case 1:
+        matrix[xc][yc] = 'x'
+        computerGrid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.remove("cell-ship")
+        computerGrid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-shot")
+        break;
+      default:
+        break;
+    } 
+  })
+}
 
 
 
@@ -137,6 +398,9 @@ window.addEventListener('DOMContentLoaded', () => {
   collapseNavBar()
   renderAvatars()
   renderLeaderboard()
+  resetMatrix(playerMatrix)
   renderGameGrids()
+  selectingShips()
+  shipsArrangement()
 
 });

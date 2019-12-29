@@ -120,50 +120,53 @@
             </div>
           </div>
           <div class="ships-box col-xs-12 row">
-            <div class="ship-four col-xs-12">
-              <img class="img-fluid" src="media/ships/ship-four.png" alt="ship-four">
+            <div class="ship-four col-xs-12" name="ship-four">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-four.png" alt="ship-four">
             </div>
           </div>
           <div class="ships-box col-xs-12 row">
-            <div class="ship-three col-xs-6">
-              <img class="img-fluid" src="media/ships/ship-three.png" alt="ship-three">
+            <div class="ship-three col-xs-6" name="ship-three">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-three.png" alt="ship-three">
             </div>
-            <div class="ship-three col-xs-6">
-              <img class="img-fluid" src="media/ships/ship-three.png" alt="ship-three">
-            </div>
-          </div>
-          <div class="ships-box col-xs-12 row">
-            <div class="ship-two col-xs-4">
-              <img class="img-fluid" src="media/ships/ship-two.png" alt="ship-two">
-            </div>
-            <div class="ship-two col-xs-4">
-              <img class="img-fluid" src="media/ships/ship-two.png" alt="ship-two">
-            </div>
-            <div class="ship-two col-xs-4">
-              <img class="img-fluid" src="media/ships/ship-two.png" alt="ship-two">
+            <div class="ship-three col-xs-6" name="ship-three">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-three.png" alt="ship-three">
             </div>
           </div>
           <div class="ships-box col-xs-12 row">
-            <div class="ship-one col-xs-3">
-              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+            <div class="ship-two col-xs-4" name="ship-two">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-two.png" alt="ship-two">
             </div>
-            <div class="ship-one col-xs-3">
-              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+            <div class="ship-two col-xs-4" name="ship-two">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-two.png" alt="ship-two">
             </div>
-            <div class="ship-one col-xs-3">
-              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+            <div class="ship-two col-xs-4" name="ship-two">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-two.png" alt="ship-two">
             </div>
-            <div class="ship-one col-xs-3">
-              <img class="img-fluid" src="media/ships/ship-one.png" alt="ship-one">
+          </div>
+          <div class="ships-box col-xs-12 row">
+            <div class="ship-one col-xs-3" name="ship-one">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-one.png" alt="ship-one">
+            </div>
+            <div class="ship-one col-xs-3" name="ship-one">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-one.png" alt="ship-one">
+            </div>
+            <div class="ship-one col-xs-3" name="ship-one">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-one.png" alt="ship-one">
+            </div>
+            <div class="ship-one col-xs-3" name="ship-one">
+              <img class="set-active img-fluid" type="ship" src="media/ships/ship-one.png" alt="ship-one">
             </div>
           </div>
 
           <div class="ships-btns col-xs-12 row">
-            <div class="ship-three col-xs-6">
-              <button type="button" class="btn btn-primary btn-md btn-block">Rotate</button>
+            <div class="ship-two col-xs-4">
+              <button type="button" id="rotate" class="btn btn-primary btn-md btn-block">Rotate</button>
             </div>
-            <div class="ship-three col-xs-6">
-              <button type="button" class="btn btn-primary btn-md btn-block">Random</button>
+            <div class="ship-two col-xs-4">
+              <button type="button" id="random" class="btn btn-primary btn-md btn-block">Random</button>
+            </div>
+            <div class="ship-two col-xs-4">
+              <button type="button" id="go" class="set-selected btn btn-primary btn-md btn-block">Go!</button>
             </div>
           </div>
 
@@ -185,8 +188,35 @@
       </div>
     </div>
 
+    <!-- after battle modal window -->
+    <!-- Button trigger modal -->
+    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+      Launch demo modal
+    </button> -->
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- footer -->
-    <footer class="footer col-sm-12">    <!-- fixed-bottom -->
+    <footer class="footer col-sm-12">
       <div class="container">
         <span class="text-muted">Made by <a href="">Pavel Beletsky</a> and <a href="">Barak Saidoff</a>.</span>
       </div>

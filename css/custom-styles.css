@@ -96,9 +96,8 @@ table {
   /* padding-top: 100px; */
 }
 .game-screen {
-  /* width: 100%; */
-  /* padding: 0 15% 0 15%; */
-  margin: 0 20% 0 20%;
+  /* margin: 0 20% 0 20%; */
+  margin: 0 16% 0 16%;
 }
 .game-grid {
   /* width: 100%; */
@@ -107,7 +106,9 @@ table {
 .cell {
   width: 10%;
   padding-bottom: 10%;
-  background: gold; /** <-- For the demo **/
+  background: transparent;
+  border: 1px solid #272727 !important;
+  /* border-color: rgb(39, 39, 39) !important; */
 }
 
 /* ships selection */
@@ -131,6 +132,21 @@ table {
   height: 100%;
   max-width: auto;
 }
+.set-active {
+  opacity: .85;
+}
+.set-active:hover {
+  opacity: 1;
+}
+.set-selected {
+  opacity: .3;
+}
+
+/* ship status */
+.cell-ship { background: #545454; }
+.cell-shot { background: #8f0000; }
+.cell-dead { background: #000000; }
+.cell-miss { background: #cfcfcf; }
 
 
 
