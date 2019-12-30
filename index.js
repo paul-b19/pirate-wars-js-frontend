@@ -433,8 +433,14 @@ function executeMove(matrix, xc, yc) {
           grid.querySelector(`[data-coordinates = '${[cell[0]]}${[cell[1]]}']`).classList.remove("cell-shot")
           grid.querySelector(`[data-coordinates = '${[cell[0]]}${[cell[1]]}']`).classList.add("cell-dead")
         })
+        delete shipsMap[hash][shipId]
+        if (Object.keys(shipsMap[hash]).length === 0){
+          hash === "player"? result = "You lose. Don't give up, try again!" : result = "You won!"
+          console.log(`${result}`)
+        }
       }
       matrix === compMatrix ? playerMove() : setTimeout(() => { compMove() }, 1000)
+
       break;
     default:
       break;
