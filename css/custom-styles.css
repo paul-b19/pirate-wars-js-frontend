@@ -144,9 +144,9 @@ table {
 
 /* ship status */
 .cell-ship { background: #545454; }
-.cell-shot { background: #8f0000; }
-.cell-dead { background: #000000; }
-.cell-miss { background: #cfcfcf; }
+.cell-shot { background: #cc1717; }
+.cell-dead { background: #181818; }
+.cell-miss { background: #b1bfd1; }
 
 
 

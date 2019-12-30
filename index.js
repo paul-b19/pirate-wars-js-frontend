@@ -7,6 +7,7 @@ const playerGrid = document.querySelector('#player-grid')
 const computerGrid = document.querySelector('#computer-grid')
 let playerMatrix = []
 let compMatrix = []
+let shipsMap = {'player': {}, 'comp': {}}
 let shipOrientation = 'hor'
 let shipLength = 0
 let shipInProgress = false
@@ -70,8 +71,6 @@ function addLeaders(leaders) {
 
 //  rendering game grids
 function renderGameGrids() {
-  // const playerGrid = document.querySelector('#player-grid')   /// -- !!!
-  // const computerGrid = document.querySelector('#computer-grid')   /// -- !!!
   
   for (x=0; x<10; x++) {
     let rowP = document.createElement('div')
@@ -191,9 +190,9 @@ function selectingShips() {
       // computerGrid.style.display = ""
       resetMatrix(compMatrix)
       shipsRandomizer(compMatrix)
-      console.log(compMatrix)
+      // console.log(compMatrix)
 
-      startBattle()
+      playerMove()
     }
   }) 
 }
@@ -212,7 +211,7 @@ function resetMatrix(matrix) {
 
 //  setting ship type and horizontal orientation
 function setShip(type) {
-  console.log(type)
+  // console.log(type)
   shipOrientation = "hor"
   switch (type) {
     case "ship-four":
@@ -277,10 +276,12 @@ function shipsRandomizer(matrix) {
         renderShip(xc, yc)
       }
       ships.shift()
+      shipCounter++
     }
   }
   shipLength = 0
   shipOrientation = 'hor'
+  shipCounter = 0
 }
 
 //  coordinates verification
@@ -327,15 +328,29 @@ function coordVerification(xc, yc, matrix) {
   return result
 }
 
-//  adding ship to matrix
+//  adding ship to matrix + adding ship to shipsMap + adding ship data-id to grid cell
 function addShip(xc, yc, matrix) {
+  if (matrix === playerMatrix) {
+    hash = shipsMap['player']
+    grid = playerGrid
+  } else {
+    hash = shipsMap['comp']
+    grid = computerGrid
+  }
+
   if (shipOrientation === "hor") {
+    hash[shipCounter] = []
     for (i=yc; i<yc+shipLength; i++) {
       matrix[xc][i] = 1
+      hash[shipCounter].push([xc, i])
+      grid.querySelector(`[data-coordinates = '${xc}${i}']`).dataset.id = shipCounter
     }
   } else {
+    hash[shipCounter] = []
     for (i=xc; i<xc+shipLength; i++) {
       matrix[i][yc] = 1
+      hash[shipCounter].push([i, yc])
+      grid.querySelector(`[data-coordinates = '${i}${yc}']`).dataset.id = shipCounter
     }
   }
   // console.log(matrix)
@@ -357,33 +372,76 @@ function renderShip(xc, yc) {
 }
 
 //  starting battle
-function startBattle() {
-  playerMove()
-  
+
+// function playerMove() {
+//   computerGrid.addEventListener('click', function gridClick(e) {
+//     console.log(e.target.dataset.coordinates)
+//     let xc = parseInt(e.target.dataset.coordinates.charAt(0))
+//     let yc = parseInt(e.target.dataset.coordinates.charAt(1))
+//     executeMove(compMatrix, xc, yc)
+//   })
+
+//   computerGrid.removeEventListener('click', gridClick(e), true)
+// }
+
+function playerMove() {
+  computerGrid.addEventListener('click', gridClick)
 }
 
-//  player's move
-function playerMove() {
-  computerGrid.addEventListener('click', function(e) {
-    console.log(e.target.dataset.coordinates)
-    let xc = parseInt(e.target.dataset.coordinates.charAt(0))
-    let yc = parseInt(e.target.dataset.coordinates.charAt(1))
-    let matrix = compMatrix
-    switch (matrix[xc][yc]) {
-      case 0:
-        matrix[xc][yc] = '*'
-        computerGrid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-miss")
-        break;
-      case 1:
-        matrix[xc][yc] = 'x'
-        computerGrid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.remove("cell-ship")
-        computerGrid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-shot")
-        break;
-      default:
-        break;
-    } 
-  })
+function gridClick(e) {
+  // console.log(e.target.dataset.coordinates)
+  let xc = parseInt(e.target.dataset.coordinates.charAt(0))
+  let yc = parseInt(e.target.dataset.coordinates.charAt(1))
+  executeMove(compMatrix, xc, yc)
 }
+
+function compMove() {
+  computerGrid.removeEventListener('click', gridClick)
+
+  let xc = Math.floor(Math.random()*10)
+  let yc = Math.floor(Math.random()*10)
+  while (playerMatrix[xc][yc] === 'x' || playerMatrix[xc][yc] === '*') {
+    xc = Math.floor(Math.random()*10)
+    yc = Math.floor(Math.random()*10)
+  }
+  setTimeout(() => { executeMove(playerMatrix, xc, yc) }, 1000);
+}
+
+function executeMove(matrix, xc, yc) {
+  matrix === compMatrix ? (grid = computerGrid, hash = 'comp') : (grid = playerGrid, hash = 'player')
+  switch (matrix[xc][yc]) {
+    case 0:
+      matrix[xc][yc] = '*'
+      grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-miss")
+      
+      matrix === compMatrix ? compMove() : playerMove()
+      break;
+    case 1:
+      matrix[xc][yc] = 'x'
+      grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.remove("cell-ship")
+      grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-shot")
+  
+      let shipId = grid.querySelector(`[data-coordinates = '${xc}${yc}']`).dataset.id
+      let shipIsDone = true
+      shipsMap[hash][shipId].forEach(cell => {
+        if (matrix[cell[0]][cell[1]] === 1) {
+          shipIsDone = false
+        }
+      })
+      if (shipIsDone) {
+        shipsMap[hash][shipId].forEach(cell => {
+          grid.querySelector(`[data-coordinates = '${[cell[0]]}${[cell[1]]}']`).classList.remove("cell-shot")
+          grid.querySelector(`[data-coordinates = '${[cell[0]]}${[cell[1]]}']`).classList.add("cell-dead")
+        })
+      }
+      matrix === compMatrix ? playerMove() : setTimeout(() => { compMove() }, 1000)
+      break;
+    default:
+      break;
+  }
+}
+
+
 
 
 
