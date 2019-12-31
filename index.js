@@ -1,10 +1,13 @@
 const url = "http://localhost:3000/leaders"
+const leaderbord = document.querySelector('tbody')
 const homeScreen = document.querySelector('#home-screen')
 const gameScreen = document.querySelector('#game-container')
 const quitLink = document.querySelector('#quit-link')
 const shipsBoard = document.querySelector('#ships-selection')
 const playerGrid = document.querySelector('#player-grid')
 const computerGrid = document.querySelector('#computer-grid')
+let player = {}
+let tempAccuracy = {hit: 0, shot: 0, totalAcc: 0}
 let playerMatrix = []
 let compMatrix = []
 let shipsMap = {'player': {}, 'comp': {}}
@@ -44,10 +47,11 @@ function renderAvatars() {
 function renderLeaderboard() {
   fetch(url).then(resp => resp.json())
     .then(leaders => addLeaders(leaders))
+    .catch(error => console.log('Error', error))
 }
 
 function addLeaders(leaders) {
-  const leaderbord = document.querySelector('tbody')
+  // const leaderbord = document.querySelector('tbody')
   let i = 1
   leaders.forEach(leader => {
     let trAct = document.createElement('tr')
@@ -97,12 +101,15 @@ function renderGameGrids() {
 function letsPlay(event) {
   event.preventDefault();
   const form = event.target.parentNode
-  console.log(form.elements[0].value)
+  let name = form.elements[0].value
+  let avatar = form.elements[1].value
+  console.log(name)
+  console.log(avatar)
 
   const nameInput = document.querySelector('#playerName')
   const errMsg = document.querySelector('.invalid-feedback')
 
-  if (form.elements[0].value === "") {
+  if (name === "") {
     nameInput.classList.add("is-invalid")
     // alert("Please provide a username!")
     nameInput.classList.add("apply-shake");
@@ -119,21 +126,9 @@ function letsPlay(event) {
     // gameScreen.setAttribute("style", "display: block;")
     gameScreen.style.display = ""
     quitLink.setAttribute("style", "display: initial;")
+
+    postPlayer(name, avatar)
   }
-}
-
-//  quitting game
-function quitGame(event) {
-  event.preventDefault()
-  console.log(event.target)
-  gameScreen.setAttribute("style", "display: none;")
-  quitLink.setAttribute("style", "display: none;")
-  homeScreen.setAttribute("style", "display: initial;")
-
-  /// shipsSelection --> active
-  /// computerGrid --> inactive
-  /// reset player matrix
-  /// or function resetAll() ???
 }
 
 //  selecting ships
@@ -372,18 +367,6 @@ function renderShip(xc, yc) {
 }
 
 //  starting battle
-
-// function playerMove() {
-//   computerGrid.addEventListener('click', function gridClick(e) {
-//     console.log(e.target.dataset.coordinates)
-//     let xc = parseInt(e.target.dataset.coordinates.charAt(0))
-//     let yc = parseInt(e.target.dataset.coordinates.charAt(1))
-//     executeMove(compMatrix, xc, yc)
-//   })
-
-//   computerGrid.removeEventListener('click', gridClick(e), true)
-// }
-
 function playerMove() {
   computerGrid.addEventListener('click', gridClick)
 }
@@ -414,12 +397,14 @@ function executeMove(matrix, xc, yc) {
       matrix[xc][yc] = '*'
       grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-miss")
       
-      matrix === compMatrix ? compMove() : playerMove()
+      matrix === compMatrix ? (tempAccuracy.shot++ , compMove()) : playerMove()
       break;
     case 1:
       matrix[xc][yc] = 'x'
       grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.remove("cell-ship")
       grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-shot")
+
+      matrix === compMatrix ? (tempAccuracy.hit++, tempAccuracy.shot++) : null  /// ???
   
       let shipId = grid.querySelector(`[data-coordinates = '${xc}${yc}']`).dataset.id
       let shipIsDone = true
@@ -435,8 +420,17 @@ function executeMove(matrix, xc, yc) {
         })
         delete shipsMap[hash][shipId]
         if (Object.keys(shipsMap[hash]).length === 0){
-          hash === "player"? result = "You lose. Don't give up, try again!" : result = "You won!"
+          // hash === "player"? result = "You lose. Don't give up, try again!" : result = "You won!"
+          if (hash === "player") {
+            result = "You lose. Don't give up, try again!"
+            patchPlayer('loss')
+          } else {
+            result = "Congratulations! You won!"
+            patchPlayer('win')
+          }
           console.log(`${result}`)
+          document.querySelector('.game-over > h3').innerHTML = result
+          $('#gameOver').modal('show')
         }
       }
       matrix === compMatrix ? playerMove() : setTimeout(() => { compMove() }, 1000)
@@ -447,13 +441,94 @@ function executeMove(matrix, xc, yc) {
   }
 }
 
+//  quitting game from nav bar + from modal window
+function quitGame(event) {
+  // if (event.target.id === 'modal-quit') {
+  //   console.log('from modal')
+  // } else {
+  //   event.preventDefault()
+  // }
+  if (event.target.id !== 'modal-quit') {
+    event.preventDefault()
+  }
+  player = {}
+  gameScreen.setAttribute("style", "display: none;")
+  quitLink.setAttribute("style", "display: none;")
+  homeScreen.setAttribute("style", "display: initial;")
 
+  tempAccuracy = {hit: 0, shot: 0, totalAcc: 0}
+  leaderbord.innerHTML = ''
+  renderLeaderboard()
+  resetGameScreen()
+}
 
+function resetGameScreen() {
+  shipsBoard.setAttribute("style", "display: initial;")   /// or block???
+  computerGrid.setAttribute("style", "display: none;")
+  resetMatrix(playerMatrix)
+  // resetMatrix(compMatrix)  /// - ???
+  shipsMap = {'player': {}, 'comp': {}}
+  gameScreen.querySelectorAll('.cell').forEach(cell => {
+    cell.classList.remove("cell-ship", "cell-shot", "cell-dead", "cell-miss")
+  })
+}
 
+//  play again
+function playAgain() {
+  console.log('play again')
+  tempAccuracy.hit = 0
+  tempAccuracy.shot = 0
+  resetGameScreen()
+}
 
+//  posting player and saving player object
+function postPlayer(name, avatar) {
+  console.log(`posting player ${name} the ${avatar}`)
+  player = {
+    name: `${name}`,
+    avatar: `${avatar}`,
+    wins: 0,
+    losses: 0,
+    accuracy: 0
+  }
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(player)
+  })
+    .then(resp => resp.json())
+    .then(respPlayer => {console.log(respPlayer); player.id = respPlayer.id})
+    .catch(error => console.log('Error', error))
+}
 
+//  patching player and updating player object
+function patchPlayer(result) {
+  result === 'win' ? player.wins++ : player.losses++
 
+  let tempAcc = tempAccuracy.hit / tempAccuracy.shot * 100
+  tempAccuracy.totalAcc += tempAcc
+  player.accuracy = Number.parseFloat(tempAccuracy.totalAcc / (player.wins + player.losses)).toFixed(1)
 
+  fetch(`${url}/${player.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(player)
+  })
+    .then(resp => resp.json())
+    .then(respPlayer => console.log(respPlayer))
+    .catch(error => console.log('Error', error))
+}
+
+//  invite a friend
+function inviteFriend(event) {
+  event.preventDefault()
+  console.log(event.target)
+  
+}
 
 
 

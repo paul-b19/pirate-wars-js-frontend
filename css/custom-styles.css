@@ -100,7 +100,6 @@ table {
   margin: 0 16% 0 16%;
 }
 .game-grid {
-  /* width: 100%; */
   padding: 5%;
 }
 .cell {
@@ -108,7 +107,6 @@ table {
   padding-bottom: 10%;
   background: transparent;
   border: 1px solid #272727 !important;
-  /* border-color: rgb(39, 39, 39) !important; */
 }
 
 /* ships selection */
@@ -148,6 +146,14 @@ table {
 .cell-dead { background: #181818; }
 .cell-miss { background: #b1bfd1; }
 
+/* invite friend + game over modals */
+.invite {
+  padding-bottom: 1vmax;
+}
+.game-over {
+  padding-top: 4vmax;
+  padding-bottom: 4vmax;
+}
 
 
 .footer {
