@@ -102,7 +102,8 @@ function letsPlay(event) {
   event.preventDefault();
   const form = event.target.parentNode
   let name = form.elements[0].value
-  let avatar = form.elements[1].value
+  // let avatar = form.elements[1].value
+  let avatar = $("input:radio[name=radiob]:checked").val()
   console.log(name)
   console.log(avatar)
 
