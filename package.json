@@ -8,5 +8,5 @@
   "dependencies": {
       "serve": "^10.0.1"
   },
-  "author": "Pavel Beletsky"
+  "author": "Pavel Beletsky, Barak Saidoff"
 }
