@@ -1,4 +1,5 @@
 const url = "http://localhost:3000/leaders"
+const prBar = document.querySelector('.while-loading')
 const leaderbord = document.querySelector('tbody')
 const homeScreen = document.querySelector('#home-screen')
 const gameScreen = document.querySelector('#game-container')
@@ -24,6 +25,42 @@ function collapseNavBar() {
   });
 }
 
+//  progress bar
+function progressBar() {
+  console.log('progress barr start')
+  
+  homeScreen.setAttribute("style", "display: none;")
+  prBar.setAttribute("style", "display: initial;")
+
+  $(".progress-bar").animate({
+    width: "70%"
+  });
+  
+  let interval = setInterval(() => {
+    fetch(url).then(resp => resp.json())
+      .then(leaders => {
+        addLeaders(leaders)
+        endingProgressBar()
+        clearInterval(interval)
+      })
+  }, 5000)
+}
+
+function endingProgressBar() {
+  console.log('progress barr ending')
+    
+  $(".progress-bar").animate({
+    width: "100%"
+  });
+
+  console.log('delay 3s')
+  setTimeout(() => {
+    prBar.setAttribute("style", "display: none;")
+    homeScreen.setAttribute("style", "display: initial;")
+    $(".progress-bar").css('width', '0%')
+  }, 3000)
+}
+
 //  rendering avatars
 function renderAvatars() {
   const avatarSelection = document.querySelector('.avatars')
@@ -47,11 +84,10 @@ function renderAvatars() {
 function renderLeaderboard() {
   fetch(url).then(resp => resp.json())
     .then(leaders => addLeaders(leaders))
-    .catch(error => console.log('Error', error))
+    .catch(error => {console.log('Error', error); progressBar()})
 }
 
 function addLeaders(leaders) {
-  // const leaderbord = document.querySelector('tbody')
   let i = 1
   leaders.forEach(leader => {
     let trAct = document.createElement('tr')
@@ -86,12 +122,12 @@ function renderGameGrids() {
     for (y=0; y<10; y++) {
       let cellP = document.createElement("div")
       cellP.dataset.coordinates = `${x}${y}`
-      cellP.setAttribute("class", "cell") // class: "border"
+      cellP.setAttribute("class", "cell")
       rowP.appendChild(cellP)
 
       let cellC = document.createElement("div")
       cellC.dataset.coordinates = `${x}${y}`
-      cellC.setAttribute("class", "cell") // class: "border"
+      cellC.setAttribute("class", "cell")
       rowC.appendChild(cellC)
     }
   } 
@@ -104,8 +140,8 @@ function letsPlay(event) {
   let name = form.elements[0].value
   // let avatar = form.elements[1].value
   let avatar = $("input:radio[name=radiob]:checked").val()
-  console.log(name)
-  console.log(avatar)
+  // console.log(name)
+  // console.log(avatar)
 
   const nameInput = document.querySelector('#playerName')
   const errMsg = document.querySelector('.invalid-feedback')
@@ -134,7 +170,6 @@ function letsPlay(event) {
 
 //  selecting ships
 function selectingShips() {
-  // const shipsBoard = document.querySelector('#ships-selection')
   const random = shipsBoard.querySelector('#random')
   const rotate = shipsBoard.querySelector('#rotate')
   const go = shipsBoard.querySelector('#go')
@@ -143,7 +178,7 @@ function selectingShips() {
   shipsBoard.addEventListener('click', function(e) {
     // ship click
     if (e.target.getAttribute("type") === "ship" && !e.target.classList.contains("set-selected") && shipInProgress === false) {
-      console.log(e.target.parentNode.getAttribute("name"))
+      // console.log(e.target.parentNode.getAttribute("name"))
       shipInProgress = true
       e.target.classList.remove("set-active")
       e.target.classList.add("set-selected")
@@ -152,7 +187,6 @@ function selectingShips() {
       setShip(e.target.parentNode.getAttribute("name"))
     } else if (e.target === random && !e.target.classList.contains("set-selected")) {
       // random click
-      console.log(e.target.id)
       ships.forEach(ship => {
         ship.classList.remove("set-active")
         ship.classList.add("set-selected")
@@ -165,11 +199,9 @@ function selectingShips() {
       shipsRandomizer(matrix)
     } else if (e.target === rotate && !e.target.classList.contains("set-selected")) {
       // rotate click
-      console.log(e.target.id)
       shipOrientation === 'hor' ? shipOrientation = 'ver' : shipOrientation = 'hor'
     } else if (e.target === go && !e.target.classList.contains("set-selected")) {
       // go click
-      console.log(e.target.id)
       ships.forEach(ship => {
         ship.classList.remove("set-selected")
         ship.classList.add("set-active")
@@ -186,7 +218,6 @@ function selectingShips() {
       // computerGrid.style.display = ""
       resetMatrix(compMatrix)
       shipsRandomizer(compMatrix)
-      // console.log(compMatrix)
 
       playerMove()
     }
@@ -207,7 +238,6 @@ function resetMatrix(matrix) {
 
 //  setting ship type and horizontal orientation
 function setShip(type) {
-  // console.log(type)
   shipOrientation = "hor"
   switch (type) {
     case "ship-four":
@@ -229,14 +259,11 @@ function setShip(type) {
 function shipsArrangement() {
   playerGrid.addEventListener('click', function(e) {
     if (shipLength !== 0) {
-      console.log(e.target.dataset.coordinates)
       let xc = parseInt(e.target.dataset.coordinates.charAt(0))
       let yc = parseInt(e.target.dataset.coordinates.charAt(1))
       let matrix = playerMatrix
 
       if (coordVerification(xc, yc, matrix)) {
-        console.log('true')
-
         addShip(xc, yc, matrix)
         renderShip(xc, yc)
         shipCounter++
@@ -349,7 +376,6 @@ function addShip(xc, yc, matrix) {
       grid.querySelector(`[data-coordinates = '${i}${yc}']`).dataset.id = shipCounter
     }
   }
-  // console.log(matrix)
 }
 
 //  rendering ship on player's grid
@@ -373,7 +399,6 @@ function playerMove() {
 }
 
 function gridClick(e) {
-  // console.log(e.target.dataset.coordinates)
   let xc = parseInt(e.target.dataset.coordinates.charAt(0))
   let yc = parseInt(e.target.dataset.coordinates.charAt(1))
   executeMove(compMatrix, xc, yc)
@@ -421,7 +446,6 @@ function executeMove(matrix, xc, yc) {
         })
         delete shipsMap[hash][shipId]
         if (Object.keys(shipsMap[hash]).length === 0){
-          // hash === "player"? result = "You lose. Don't give up, try again!" : result = "You won!"
           if (hash === "player") {
             result = "You lose. Don't give up, try again!"
             patchPlayer('loss')
@@ -429,7 +453,6 @@ function executeMove(matrix, xc, yc) {
             result = "Congratulations! You won!"
             patchPlayer('win')
           }
-          console.log(`${result}`)
           document.querySelector('.game-over > h3').innerHTML = result
           $('#gameOver').modal('show')
         }
@@ -444,11 +467,6 @@ function executeMove(matrix, xc, yc) {
 
 //  quitting game from nav bar + from modal window
 function quitGame(event) {
-  // if (event.target.id === 'modal-quit') {
-  //   console.log('from modal')
-  // } else {
-  //   event.preventDefault()
-  // }
   if (event.target.id !== 'modal-quit') {
     event.preventDefault()
   }
@@ -467,7 +485,7 @@ function resetGameScreen() {
   shipsBoard.setAttribute("style", "display: initial;")   /// or block???
   computerGrid.setAttribute("style", "display: none;")
   resetMatrix(playerMatrix)
-  // resetMatrix(compMatrix)  /// - ???
+  // resetMatrix(compMatrix)
   shipsMap = {'player': {}, 'comp': {}}
   gameScreen.querySelectorAll('.cell').forEach(cell => {
     cell.classList.remove("cell-ship", "cell-shot", "cell-dead", "cell-miss")
@@ -476,7 +494,6 @@ function resetGameScreen() {
 
 //  play again
 function playAgain() {
-  console.log('play again')
   tempAccuracy.hit = 0
   tempAccuracy.shot = 0
   resetGameScreen()
@@ -530,7 +547,6 @@ function inviteFriend(event) {
   console.log(event.target)
   
 }
-
 
 
 window.addEventListener('DOMContentLoaded', () => {
