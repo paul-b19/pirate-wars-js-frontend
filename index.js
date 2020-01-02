@@ -1,4 +1,4 @@
-const url = "http://localhost:3000/leaders"
+const url = "http://pirate-wars-rails.herokuapp.com/leaders"
 const prBar = document.querySelector('.while-loading')
 const leaderbord = document.querySelector('tbody')
 const homeScreen = document.querySelector('#home-screen')
