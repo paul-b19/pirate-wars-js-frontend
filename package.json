@@ -1,0 +1,12 @@
+{
+  "name": "pirate_wars",
+  "version": "2.0.0",
+  "description": "Game",
+  "scripts": {
+    "start": "serve"
+  },
+  "dependencies": {
+    "serve": "^10.0.1"
+  },
+  "author": "Pavel Beletsky, Barak Saidoff"
+}
