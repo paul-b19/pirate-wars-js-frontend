@@ -1,4 +1,4 @@
-const url = "http://pirate-wars.herokuapp.com/leaders"
+const url = "http://pirate-wars-rails.herokuapp.com/leaders"
 const audio = document.querySelector("audio")
 const prBar = document.querySelector('.while-loading')
 const leaderbord = document.querySelector('tbody')
