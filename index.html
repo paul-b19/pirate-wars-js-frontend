@@ -45,6 +45,10 @@
             <li class="nav-item">
               <a class="nav-link" href="https://github.com/paul-b19/pirate-wars-js-frontend" target="_blank">GitHub</a>
             </li>
+            <li class="nav-item" id="music">
+              <a class="nav-link" href="" onclick="music(event)">Turn On Sound</a>
+              <audio autoplay="autoplay" loop="true" src="media/Karstenholymoly_-_The_Thunderstorm.mp3"></audio>
+            </li>
             <li class="nav-item" id="quit-link" style="display: none;">
               <a class="nav-link" href="" onclick="quitGame(event)">Quit</a>
             </li>
@@ -199,11 +203,20 @@
             </button>
           </div>
           <div class="modal-body">
+            <h3>Goal</h3>
             <ul>
-              <li><p>The first rule of Pirate Wars is: You do not talk about Pirate Wars.</p></li>
-              <li><p>The second rule of Pirate Wars is: You do not talk about Pirate Wars.</p></li>
-              <li><p>Third rule of Pirate Wars: ten ships sank, the fight is over.</p></li>
-              <li><p>Fourth rule: Only you and computer to a fight.</p></li>
+              <li>Sink all of your opponent's ships.</li>
+            </ul>
+            <h3>Setup</h3>
+            <ul>
+              <li>Place ships on board by clicking and placing on game grid.</li>
+              <li>Ships by default are placed horizontally. Select ship and then rotate before placing to change orientation.</li>
+            </ul>
+            <h3>Rules</h3>
+            <ul>
+              <li>Take turns firing shots by selecting coordinates on computer grid.</li>
+              <li>If a player hits the opponent's boat, the coordinate turns red indicating a ship was hit. Player gets to go again.</li>
+              <li>A ship is sunk when all the coordinates for each boat are hit. The coordinate turns black indicating a sunken ship.</li>
             </ul>
             <div class="text-center">
               <img class="logo" alt="Pirate Flag Logo" src="media/pirate-navbar-logo.png">
@@ -257,7 +270,22 @@
             </button>
           </div>
           <div class="modal-body">
-            <p>Long story goes here...</p>
+            <h3>Backend:</h3>
+            <ul>
+              <li>Rails API</li>
+              <li>PostgreSQL</li>
+              <li>Heroku</li>
+            </ul>
+            <h3>Frontend:</h3>
+            <ul>
+              <li>Vanilla JavaScript</li>
+              <li>jQuery</li>
+              <li>Bootstrap</li>
+              <li>Heroku</li>
+            </ul>
+            <h3>Background music:</h3>
+            <div class="attribution-block"><a href="http://dig.ccmixter.org/files/Karstenholymoly/41792">The Thunderstorm</a> by Karstenholymoly (c) copyright 2013 Licensed under a Creative Commons <a href="http://creativecommons.org/licenses/by-nc/3.0/">Attribution Noncommercial  (3.0)</a> license. Ft: morgantj</div>
+            <br>
             <div class="text-center">
               <img class="qr-code" alt="QR Code" src="media/qr_code.png">
             </div>

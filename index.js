@@ -1,4 +1,5 @@
 const url = "http://localhost:3000/leaders"
+const audio = document.querySelector("audio")
 const prBar = document.querySelector('.while-loading')
 const leaderbord = document.querySelector('tbody')
 const homeScreen = document.querySelector('#home-screen')
@@ -631,6 +632,19 @@ function patchPlayer(result) {
 function inviteFriend(event) {
   event.preventDefault()
   console.log(event.target)
+}
+
+//  background music
+function music(event) {
+  event.preventDefault()
+  if (audio.paused) {
+    event.target.innerHTML = 'Turn Off Sound'
+    audio.volume = 0.4
+    audio.play()
+  } else {
+    event.target.innerHTML = 'Turn On Sound'
+    audio.pause()
+  }
 }
 
 
