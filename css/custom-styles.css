@@ -161,6 +161,11 @@ table {
   padding-top: 4vmax;
   padding-bottom: 4vmax;
 }
+.qr-code {
+  width: 40vmin;
+  height: auto;
+  padding-bottom: 2vmin;
+}
 
 
 .footer {

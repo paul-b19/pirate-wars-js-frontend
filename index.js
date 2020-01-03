@@ -11,11 +11,13 @@ let player = {}
 let tempAccuracy = {hit: 0, shot: 0, totalAcc: 0}
 let playerMatrix = []
 let compMatrix = []
+let ships = shipsBoard.querySelectorAll("[type='ship']")
 let shipsMap = {'player': {}, 'comp': {}}
 let shipOrientation = 'hor'
 let shipLength = 0
 let shipInProgress = false
 let shipCounter = 0
+let prevSuccessfulShot = []
 
 
 //  navbar collapse
@@ -173,7 +175,7 @@ function selectingShips() {
   const random = shipsBoard.querySelector('#random')
   const rotate = shipsBoard.querySelector('#rotate')
   const go = shipsBoard.querySelector('#go')
-  let ships = shipsBoard.querySelectorAll("[type='ship']")
+  // let ships = shipsBoard.querySelectorAll("[type='ship']")
   let matrix = playerMatrix
   shipsBoard.addEventListener('click', function(e) {
     // ship click
@@ -406,13 +408,83 @@ function gridClick(e) {
 
 function compMove() {
   computerGrid.removeEventListener('click', gridClick)
+  let xc = 0
+  let yc = 0
+  // let contSearch = true
 
-  let xc = Math.floor(Math.random()*10)
-  let yc = Math.floor(Math.random()*10)
-  while (playerMatrix[xc][yc] === 'x' || playerMatrix[xc][yc] === '*') {
+  if (prevSuccessfulShot.length === 0) {
     xc = Math.floor(Math.random()*10)
     yc = Math.floor(Math.random()*10)
+    while (playerMatrix[xc][yc] === 'x' || playerMatrix[xc][yc] === '*') {
+      xc = Math.floor(Math.random()*10)
+      yc = Math.floor(Math.random()*10)
+    }
+
+    // while (contSearch) {
+    //   if (playerMatrix[xc][yc] !== "x" || playerMatrix[xc][yc] !== "*") {
+    //     xc === 0 ? x = 0 : x = xc-1
+    //     xc === 9 ? xMax = 9 : xMax = xc+1
+    //     for (x; x<=xMax; x++) {
+    //       yc === 0 ? y = 0 : y = yc-1
+    //       yc === 9 ? yMax = 9 : yMax = yc+1
+    //       for (y; y<=yMax; y++) {
+    //         if (playerMatrix[x][y] === "x" ) {
+    //           contSearch = true
+    //           break;
+    //         } else {
+    //           contSearch = false
+    //         }
+    //       }
+    //       if (contSearch) {break}
+    //     }
+    //   } else {
+    //     xc = Math.floor(Math.random()*10)
+    //     yc = Math.floor(Math.random()*10)
+    //   }
+    //   if (contSearch) {
+    //     xc = Math.floor(Math.random()*10)
+    //     yc = Math.floor(Math.random()*10)
+    //   }
+    // } 
+  } else if (prevSuccessfulShot.length === 1) {
+    xc = prevSuccessfulShot[0][0]
+    yc = prevSuccessfulShot[0][1]
+
+    if (xc !== 0 && playerMatrix[xc-1][yc] !== "x" && playerMatrix[xc-1][yc] !== "*") {
+      xc = xc - 1
+    } else if (xc !== 9 && playerMatrix[xc+1][yc] !== "x" && playerMatrix[xc+1][yc] !== "*") {
+      xc = xc + 1
+    } else if (yc !== 0 && playerMatrix[xc][yc-1] !== "x" && playerMatrix[xc][yc-1] !== "*") {
+      yc = yc - 1
+    } else if (yc !== 9 && playerMatrix[xc][yc+1] !== "x" && playerMatrix[xc][yc+1] !== "*") {
+      yc = yc + 1
+    }
+  } else if (prevSuccessfulShot.length > 1){
+    let ys = []
+    let xs = []
+    if (prevSuccessfulShot[0][0] === prevSuccessfulShot[1][0]) {
+      xc = prevSuccessfulShot[0][0]
+      prevSuccessfulShot.forEach(coord => {
+        ys.push(coord[1])
+      })
+      if (Math.min(...ys) !== 0 && playerMatrix[xc][Math.min(...ys) - 1] !== "*") {
+        yc = Math.min(...ys) - 1
+      } else if (Math.max(...ys) !== 9 && playerMatrix[xc][Math.max(...ys) + 1] !== "*") {
+        yc = Math.max(...ys) + 1
+      }
+    } else {
+      yc = prevSuccessfulShot[0][1]
+      prevSuccessfulShot.forEach(coord => {
+        xs.push(coord[0])
+      })
+      if (Math.min(...xs) !== 0 && playerMatrix[Math.min(...xs) -1][yc] !== "*") {
+        xc = Math.min(...xs) - 1
+      } else if (Math.max(...xs) !== 9 || playerMatrix[Math.max(...xs) +1][yc] !== "*") {
+        xc = Math.max(...xs) + 1
+      }
+    }
   }
+  // contSearch = true
   setTimeout(() => { executeMove(playerMatrix, xc, yc) }, 1000);
 }
 
@@ -430,7 +502,7 @@ function executeMove(matrix, xc, yc) {
       grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.remove("cell-ship")
       grid.querySelector(`[data-coordinates = '${xc}${yc}']`).classList.add("cell-shot")
 
-      matrix === compMatrix ? (tempAccuracy.hit++, tempAccuracy.shot++) : null  /// ???
+      matrix === compMatrix ? (tempAccuracy.hit++, tempAccuracy.shot++) : prevSuccessfulShot.push([xc,yc])
   
       let shipId = grid.querySelector(`[data-coordinates = '${xc}${yc}']`).dataset.id
       let shipIsDone = true
@@ -440,6 +512,8 @@ function executeMove(matrix, xc, yc) {
         }
       })
       if (shipIsDone) {
+        matrix === playerMatrix ? prevSuccessfulShot = [] : null
+
         shipsMap[hash][shipId].forEach(cell => {
           grid.querySelector(`[data-coordinates = '${[cell[0]]}${[cell[1]]}']`).classList.remove("cell-shot")
           grid.querySelector(`[data-coordinates = '${[cell[0]]}${[cell[1]]}']`).classList.add("cell-dead")
@@ -469,6 +543,17 @@ function executeMove(matrix, xc, yc) {
 function quitGame(event) {
   if (event.target.id !== 'modal-quit') {
     event.preventDefault()
+    
+    ships.forEach(ship => {
+      ship.classList.remove("set-selected")
+      ship.classList.add("set-active")
+    })
+    rotate.classList.remove("set-selected")
+    rotate.classList.add("set-active")
+    random.classList.remove("set-selected")
+    random.classList.add("set-active")
+    go.classList.remove("set-active")
+    go.classList.add("set-selected")
   }
   player = {}
   gameScreen.setAttribute("style", "display: none;")
@@ -490,6 +575,7 @@ function resetGameScreen() {
   gameScreen.querySelectorAll('.cell').forEach(cell => {
     cell.classList.remove("cell-ship", "cell-shot", "cell-dead", "cell-miss")
   })
+  prevSuccessfulShot = []
 }
 
 //  play again
@@ -545,7 +631,6 @@ function patchPlayer(result) {
 function inviteFriend(event) {
   event.preventDefault()
   console.log(event.target)
-  
 }
 
 
